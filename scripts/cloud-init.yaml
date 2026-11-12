@@ -1,0 +1,84 @@
+#cloud-config
+package_update: true
+package_upgrade: true
+timezone: America/Sao_Paulo
+
+packages:
+  - apache2
+  - libapache2-mod-php
+  - php
+  - php-mysql
+  - php-gd
+  - php-intl
+  - php-curl
+  - php-xml
+  - php-mbstring
+  - php-zip
+  - php-bz2
+  - php-ldap
+  - php-apcu
+  - php-bcmath
+  - mysql-client
+  - certbot
+  - python3-certbot-apache
+  - unattended-upgrades
+  - fail2ban
+
+write_files:
+  - path: /etc/apache2/sites-available/glpi.conf
+    content: |
+      <VirtualHost *:80>
+          ServerName ${domain}
+          DocumentRoot /var/www/glpi
+          <Directory /var/www/glpi>
+              AllowOverride All
+              Require all granted
+          </Directory>
+          ErrorLog $${APACHE_LOG_DIR}/glpi_error.log
+          CustomLog $${APACHE_LOG_DIR}/glpi_access.log combined
+      </VirtualHost>
+
+  - path: /etc/php/8.3/apache2/conf.d/99-glpi.ini
+    content: |
+      session.cookie_httponly = On
+      memory_limit = 256M
+      upload_max_filesize = 20M
+      post_max_size = 20M
+      max_execution_time = 300
+      date.timezone = America/Sao_Paulo
+
+  - path: /etc/glpi/local_define.php
+    content: |
+      <?php
+      define('GLPI_VAR_DIR', '/var/lib/glpi');
+      define('GLPI_LOG_DIR', '/var/log/glpi');
+
+  - path: /root/downstream.php
+    content: |
+      <?php
+      define('GLPI_CONFIG_DIR', '/etc/glpi/');
+      if (file_exists(GLPI_CONFIG_DIR . '/local_define.php')) {
+          require_once GLPI_CONFIG_DIR . '/local_define.php';
+      }
+
+  - path: /etc/cron.d/glpi
+    content: |
+      * * * * * www-data /usr/bin/php /var/www/glpi/front/cron.php > /dev/null 2>&1
+
+runcmd:
+  - curl -fsSL -o /tmp/glpi.tgz https://github.com/glpi-project/glpi/releases/download/${glpi_version}/glpi-${glpi_version}.tgz
+  - tar -xzf /tmp/glpi.tgz -C /var/www/
+  - mkdir -p /var/lib/glpi /var/log/glpi
+  - cp -a /var/www/glpi/files/. /var/lib/glpi/
+  - cp /root/downstream.php /var/www/glpi/inc/downstream.php
+  - chown -R root:root /var/www/glpi
+  - chown -R www-data:www-data /etc/glpi /var/lib/glpi /var/log/glpi /var/www/glpi/marketplace
+  - curl -fsSL https://cacerts.digicert.com/DigiCertGlobalRootG2.crt.pem -o /tmp/digicert.pem
+  - curl -fsSL "https://www.microsoft.com/pkiops/certs/Microsoft%20RSA%20Root%20Certificate%20Authority%202017.crt" -o /tmp/msrsa.crt
+  - openssl x509 -inform DER -in /tmp/msrsa.crt -out /tmp/msrsa.pem
+  - cat /tmp/digicert.pem /tmp/msrsa.pem > /etc/glpi/azure-mysql-ca.pem
+  - a2dissite 000-default
+  - a2ensite glpi
+  - a2enmod rewrite headers ssl
+  - systemctl restart apache2
+  - systemctl enable --now fail2ban
