@@ -1,4 +1,5 @@
 resource "azurerm_network_interface" "vm" {
+  #checkov:skip=CKV_AZURE_119:VM unica exposta por IP publico com NSG restrito. Application Gateway no roadmap
   name                = "nic-${local.suffix}"
   location            = azurerm_resource_group.main.location
   resource_group_name = azurerm_resource_group.main.name
@@ -14,6 +15,7 @@ resource "azurerm_network_interface" "vm" {
 }
 
 resource "azurerm_linux_virtual_machine" "web" {
+  #checkov:skip=CKV_AZURE_50:Extensao do Azure Monitor Agent e necessaria para observabilidade
   name                            = "vm-${local.suffix}"
   location                        = azurerm_resource_group.main.location
   resource_group_name             = azurerm_resource_group.main.name

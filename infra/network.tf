@@ -14,6 +14,7 @@ resource "azurerm_subnet" "app" {
 }
 
 resource "azurerm_subnet" "db" {
+  #checkov:skip=CKV2_AZURE_31:Subnet delegada ao MySQL; trafego restrito a VNet. NSG dedicado no roadmap
   name                 = "snet-prd-db-${var.location_short}-001"
   resource_group_name  = azurerm_resource_group.main.name
   virtual_network_name = azurerm_virtual_network.main.name
@@ -29,6 +30,7 @@ resource "azurerm_subnet" "db" {
 }
 
 resource "azurerm_network_security_group" "app" {
+  #checkov:skip=CKV_AZURE_160:Porta 80 necessaria para o desafio HTTP-01 do Lets Encrypt e redirect para HTTPS
   name                = "nsg-${local.suffix}"
   location            = azurerm_resource_group.main.location
   resource_group_name = azurerm_resource_group.main.name
