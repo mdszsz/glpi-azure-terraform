@@ -75,7 +75,7 @@ variable "alert_email" {
 
 variable "mysql_server_name" {
   type        = string
-  default     = "db-prd-web-eus-001"
+  default     = "db-prd-web-eus-mszsz-001"
   description = "Precisa ser único em todo o Azure"
 }
 
