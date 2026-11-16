@@ -1,0 +1,4 @@
+# Copie para terraform.tfvars (fora do Git) e preencha
+admin_ssh_public_key = "ssh-ed25519 AAAA... glpi-azure"
+admin_source_ip      = "203.0.113.10/32"
+alert_email          = "seu-email@exemplo.com"
