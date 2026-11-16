@@ -6,6 +6,9 @@ resource "random_password" "mysql_admin" {
 }
 
 resource "azurerm_mysql_flexible_server" "main" {
+  #checkov:skip=CKV2_AZURE_56:VNet Integration (subnet delegada) em vez de Private Endpoint; servidor ja e privado
+  #checkov:skip=CKV_AZURE_53:Servidor com VNet Integration nao possui acesso publico
+  #checkov:skip=CKV_AZURE_94:Backup local de 14 dias; geo-redundancia descartada por custo
   name                         = var.mysql_server_name
   location                     = azurerm_resource_group.main.location
   resource_group_name          = azurerm_resource_group.main.name

@@ -1,4 +1,5 @@
 resource "azurerm_recovery_services_vault" "main" {
+  #checkov:skip=CKV2_AZURE_35:Identidade gerenciada so e exigida para criptografia com chave propria (CMK)
   name                = "rsv-${local.suffix}"
   location            = azurerm_resource_group.main.location
   resource_group_name = azurerm_resource_group.main.name
