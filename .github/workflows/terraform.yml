@@ -2,7 +2,6 @@ name: terraform
 
 on:
   pull_request:
-    paths: ["infra/**", "scripts/**", ".github/workflows/**"]
   push:
     branches: [main]
     paths: ["infra/**", "scripts/**"]
