@@ -1,0 +1,67 @@
+name: terraform
+
+on:
+  pull_request:
+    paths: ["infra/**", "scripts/**", ".github/workflows/**"]
+  push:
+    branches: [main]
+    paths: ["infra/**", "scripts/**"]
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+  pull-requests: write
+
+env:
+  ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+  ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+  ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+  ARM_USE_OIDC: "true"
+  TF_IN_AUTOMATION: "true"
+  TF_VAR_admin_ssh_public_key: ${{ secrets.TF_VAR_ADMIN_SSH_PUBLIC_KEY }}
+  TF_VAR_admin_source_ip: ${{ secrets.TF_VAR_ADMIN_SOURCE_IP }}
+  TF_VAR_alert_email: ${{ secrets.TF_VAR_ALERT_EMAIL }}
+
+defaults:
+  run:
+    working-directory: infra
+
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.17.1
+      - run: terraform fmt -check -recursive
+      - run: terraform init -input=false
+      - run: terraform validate
+      - uses: bridgecrewio/checkov-action@v12
+        with:
+          directory: infra
+          framework: terraform
+          soft_fail: true
+      - run: terraform plan -input=false -out=tfplan
+      - uses: actions/upload-artifact@v4
+        with:
+          name: tfplan
+          path: infra/tfplan
+
+  apply:
+    needs: plan
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.17.1
+      - uses: actions/download-artifact@v4
+        with:
+          name: tfplan
+          path: infra
+      - run: terraform init -input=false
+      - run: terraform apply -input=false tfplan
