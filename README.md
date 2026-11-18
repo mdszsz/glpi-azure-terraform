@@ -1,4 +1,6 @@
 **GLPI no Azure com Terraform**  
+[![](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHsAAAAUCAYAAACtZULwAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA7EAAAOxAGVKw4bAAACuklEQVR4nO2ZT08aQRiHH2DXaLcpcnOpiUCsJw8eKiq3Eht6aE9NeuzBT9De+hHaUz9Bv0EvNmkv7cXGhgYTGxslHiyQGNGINAoLLCxhegC3IQsxKuCfzJNNdud95zf7S97dzc6Ma/HZiyEhxFsQS0LgBXF6gBAIu0HrWti5/yeBaLWbMdGKNXO3dTwX8Ml3vzmenT8Vi7Z7NQ/7Ro52Z915xumqawBfEOKlArwDXiG5rbiBp8B7N7B0xWYkg+G5AtzrllVVlUBggmAwiKZpCKBkGKTTaVKpFJZlDc6q5LLcVbpldH2MuXAYRWnv4vV6mZmZYXp6mng8zt5etu8uJb3B3Smo62PMz81Rr9e7Cuv1OpFIBL/f3zdzkt7ieLNVVSUcDuPxeFhZ+Q4u8Os6pVIJIQSaprF/cIBVqxGLxYhEFlheXqZWq12Ff8k5cBQ7MDFhf7otq0ahWCR/lAfapyJ3RkaaAygKoVCI7e3twbmWXAjHZzwQCABwfHxMsWh0FZbLZfL55kMQCoX6407SUxzF1jQNgNzR0Zniw8PDNo3ketPxBw1gSFXPFKutPi6Xq3eOJH3DUexisQiArut4PJ6uQkVRGB8fB6BQKPTJnqSXOIq9l83SaDQwq1Wi0UeMjo46RF6vl2g0yvDwMAC7u7v9dyq5NI5iZzIZLMsik85gGCUeLy4yNfXAzk9OTvIkFsPn8wFQrVZJpVKDcyy5MI6pl2marK//Ynb2IaurP9j4vUG5VLbzJycnbf0TiTVM0+y/U8ml6bhcms1mSSTWWFiYByAe/0kul2vrU61WSSQScrn0BtF1bTy7v8/fr98IhYJUKhU7XqlU2Eom+bOz0xaXXH8UoECXnS/TNNlKJu3NfADDMNjc3LQ3xyU3BsMNfLhqF5K+I4CPCvCm1VgCnPMsyU2nAXwGXv8D5d96StQZ80UAAAAASUVORK5CYII=)  
+](https://github.com/mdszsz/glpi-azure-terraform/actions/workflows/terraform.yml "https://github.com/mdszsz/glpi-azure-terraform/actions/workflows/terraform.yml")  
 Migração do GLPI de produção de um VPS na Locaweb para o Microsoft Azure, com **100% da infraestrutura em Terraform**, banco de dados privado, backup e monitoramento nativos e deploy por pipeline com autenticação  **OIDC, sem nenhum segredo de longa duração**.  
 **Resultado**  
 | | |  
@@ -116,4 +118,4 @@ Cerca de **US$ 70 por mês** em East US, sem descontos: VM B2s, MySQL B1ms com 2
 - Senhas no Azure Key Vault  
 - Teste de disponibilidade da URL com alerta  
 **Autor**  
-**Márcio Souza**, infraestrutura e cloud.[https://www.linkedin.com/in/marcioss/ ](LINKEDIN "LINKEDIN")  
+**Márcio Souza**, infraestrutura e cloud. [https://www.linkedin.com/in/marcioss/](LINKEDIN "LINKEDIN")  
